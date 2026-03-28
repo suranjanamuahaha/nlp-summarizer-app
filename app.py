@@ -14,7 +14,7 @@ nlp = spacy.load("en_core_web_sm")
 
 # Web Scraping Pkg
 from bs4 import BeautifulSoup
-from urllib.request import urlopen
+from urllib.request import Request, urlopen
 
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem">{}</div>"""
 
@@ -46,10 +46,14 @@ def transformer_summarizer(text):
 
 @st.cache_data
 def get_text(raw_url):
-	page = urlopen(raw_url)
-	soup = BeautifulSoup(page, "html.parser")
-	fetched_text = ' '.join(map(lambda p:p.text,soup.find_all('p')))
-	return fetched_text
+    req = Request(
+        raw_url,
+        headers={'User-Agent': 'Mozilla/5.0'}
+    )
+    page = urlopen(req)
+    soup = BeautifulSoup(page, "html.parser")
+    fetched_text = ' '.join([p.text for p in soup.find_all('p')])
+    return fetched_text
 
 
 @st.cache_resource
