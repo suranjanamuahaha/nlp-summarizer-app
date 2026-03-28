@@ -19,7 +19,6 @@ from urllib.request import urlopen
 HTML_WRAPPER = """<div style="overflow-x: auto; border: 1px solid #e6e9ef; border-radius: 0.25rem; padding: 1rem">{}</div>"""
 
 
-# ---------------- SUMMARIZERS ---------------- #
 
 # Sumy
 def sumy_summarizer(docx):
@@ -39,14 +38,11 @@ def load_summarizer():
 def transformer_summarizer(text):
 	summarizer = load_summarizer()
 
-	# 🔥 transformers limit (~1024 tokens)
 	text = text[:2000]
 
 	result = summarizer(text, max_length=130, min_length=30, do_sample=False)
 	return result[0]['summary_text']
 
-
-# ---------------- UTIL ---------------- #
 
 @st.cache_data
 def get_text(raw_url):
@@ -61,7 +57,7 @@ def analyze_text(text):
 	return nlp(text)
 
 
-# ---------------- MAIN APP ---------------- #
+
 
 def main():
 	"""Summarizer Streamlit App"""
@@ -71,7 +67,7 @@ def main():
 	activities = ["Summarize","NER Checker","NER For URL"]
 	choice = st.sidebar.selectbox("Select Activity",activities)
 
-	# -------- SUMMARIZE -------- #
+	
 	if choice == 'Summarize':
 		st.subheader("Summarize Document")
 		raw_text = st.text_area("Enter Text Here","Type Here")
@@ -97,7 +93,7 @@ def main():
 				st.write(summary_result)
 
 
-	# -------- NER TEXT -------- #
+	
 	if choice == 'NER Checker':
 		st.subheader("Named Entity Recog with Spacy")
 		raw_text = st.text_area("Enter Text Here","Type Here")
@@ -109,7 +105,7 @@ def main():
 			st.write(HTML_WRAPPER.format(html),unsafe_allow_html=True)
 
 
-	# -------- NER URL -------- #
+	
 	if choice == 'NER For URL':
 		st.subheader("Analysis on Text From URL")
 		raw_url = st.text_input("Enter URL Here","Type here")
